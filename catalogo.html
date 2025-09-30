@@ -11,6 +11,10 @@ body {
   background: #212121;
   color: #fff;
 }
+body.light {
+  background: #f0f0f0;
+  color: #212121;
+}
 .sidebar {
   position: fixed;
   left: 0;
@@ -25,10 +29,14 @@ body {
   padding: 20px 0;
   z-index: 100;
 }
+body.light .sidebar {
+  background: #e0e0e0;
+  color: #212121;
+}
 .menu {
   display: flex;
   flex-direction: column;
-  gap: 30px; /* espaçamento entre itens maior para estética */
+  gap: 30px;
   align-items: center;
   width: 100%;
 }
@@ -44,20 +52,27 @@ body {
   align-items: center;
   cursor: pointer;
   color: #bbb;
-  font-size: 14px; /* tamanho do texto maior e igual */
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
   user-select: none;
   transition: color 0.3s;
   width: 100%;
-  text-align: center; /* centraliza texto */
+  text-align: center;
 }
 .menu-item:hover,
 .menu-item.active {
   color: #2c752c;
 }
+body.light .menu-item {
+  color: #555;
+}
+body.light .menu-item:hover,
+body.light .menu-item.active {
+  color: #1a5d1a;
+}
 .menu-item img.icon {
-  width: 36px;  /* ícones maiores */
+  width: 36px;
   height: 36px;
   margin-bottom: 8px;
   object-fit: contain;
@@ -91,8 +106,6 @@ body {
   display: block;
   object-fit: cover;
 }
-
-/* Conteúdo principal com margem para lado da sidebar */
 .front, .section {
   margin-left: 130px;
   min-height: 100vh;
@@ -105,13 +118,16 @@ body {
 .front {
   background: url('img/background/background_2.jpg') center/cover no-repeat;
 }
+body.light .front {
+  background: none;
+  background-color: #dbeadf;
+}
 .logo {
   position: absolute;
   top: 28px;
   right: 36px;
   width: 130px;
 }
-/* Botões principais */
 h1 {
   font-size: 2.7em;
   margin: 0;
@@ -134,7 +150,14 @@ p {
 .option:hover {
   background: rgba(44,117,44,0.93);
 }
-/* Seções ocultas por padrão */
+body.light .option {
+  background: rgba(44,117,44,0.54);
+  color: #eee;
+}
+body.light .option:hover {
+  background: rgba(44,117,44,0.75);
+  color: white;
+}
 .section {
   padding: 40px 20px 20px 20px;
   margin-bottom: 20px;
@@ -160,6 +183,11 @@ p {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.5s ease, transform 0.5s ease;
+  color: #fff;
+}
+body.light .project {
+  background: #f1f1f1;
+  color: #202020;
 }
 .project.show {
   opacity: 1;
@@ -191,6 +219,9 @@ p {
   align-items: center;
   z-index: 999;
 }
+body.light #project-modal {
+  background: rgba(255, 255, 255, 0.9);
+}
 #project-modal .modal-content {
   position: relative;
   background: #212121;
@@ -201,6 +232,11 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: #fff;
+}
+body.light #project-modal .modal-content {
+  background: #fff;
+  color: #222;
 }
 #project-modal img {
   max-width: 100%;
@@ -216,8 +252,7 @@ p {
   display: flex;
   gap: 10px;
 }
-#project-modal .modal-buttons button,
-#project-modal .close-btn {
+#project-modal .modal-buttons button {
   padding: 4px 10px;
   background: rgba(44, 117, 44, 0.74);
   border: none;
@@ -225,24 +260,32 @@ p {
   cursor: pointer;
   color: #fff;
 }
-#project-modal .modal-buttons button:hover,
-#project-modal .close-btn:hover {
+#project-modal .modal-buttons button:hover {
   background: rgba(44, 117, 44, 0.93);
-}
-#project-modal .close-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  font-weight: bold;
-  text-align: center;
 }
 @media(max-width: 600px) {
   .project {
     width: 100%;
   }
+}
+
+/* Novo botão modo claro/escuro */
+#darkModeToggle {
+  position: fixed;
+  top: 10px;
+  left: 140px; /* para não ficar no meio da sidebar */
+  background: #2c752c;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background 0.3s;
+}
+#darkModeToggle:hover {
+  background: #1e4f1e;
 }
 </style>
 </head>
@@ -252,27 +295,27 @@ p {
   <div class="menu">
     <div class="menu-item" onclick="showSection('Home')" id="icon-home" role="button" tabindex="0" aria-label="Home Section">
       <img src="img/logo_rb/logo_5.png" alt="Home Icon" class="icon" />
-      Home
+      <span id="menu-home-label">Home</span>
     </div>
 
     <div class="menu-item" onclick="showSection('Aluminum')" id="icon-al" role="button" tabindex="0" aria-label="Aluminum Section">
       <img src="img/logo_rb/logo_alum.png" alt="Aluminum Icon" class="icon" />
-      Aluminum
+      <span id="menu-al-label">Aluminum</span>
     </div>
 
     <div class="menu-item" onclick="showSection('MetalConstructions')" id="icon-co" role="button" tabindex="0" aria-label="Metal Constructions Section">
       <img src="img/logo_rb/logo_co.png" alt="Metal Constructions Icon" class="icon" />
-      Metal Constructions
+      <span id="menu-co-label">Metal Constructions</span>
     </div>
 
     <div class="menu-item" onclick="showSection('MetalSolutions')" id="icon-sm" role="button" tabindex="0" aria-label="Metal Solutions Section">
       <img src="img/logo_rb/logo_sm.png" alt="Metal Solutions Icon" class="icon" />
-      Metal Solutions
+      <span id="menu-sm-label">Metal Solutions</span>
     </div>
 
     <div class="menu-item" onclick="showSection('Gates')" id="icon-po" role="button" tabindex="0" aria-label="Gates Section">
       <img src="img/logo_rb/logo_co.png" alt="Gates Icon" class="icon" />
-      Gates
+      <span id="menu-po-label">Gates</span>
     </div>
   </div>
 
@@ -292,6 +335,8 @@ p {
   </div>
 </div>
 
+<button id="darkModeToggle" aria-label="Toggle dark/light mode">Modo Claro</button>
+
 <div class="front" id="Home">
   <img src="img/logo_rb/logo_1.webp" alt="Logo Ribeiro & Moreira" class="logo" />
   <div>
@@ -308,7 +353,6 @@ p {
 
 <div id="project-modal">
   <div class="modal-content">
-    <button class="close-btn" onclick="closeModal()">X</button>
     <img id="modal-img" src="" />
     <div class="modal-desc" id="modal-description"></div>
     <div class="modal-buttons">
@@ -321,93 +365,86 @@ p {
 <script>
 // ===== Dados dos projetos =====
 const projectsData = { 
-  /* ALUMINIUM */ 
   "al-1": { images:["img/img_al/foto_al.png","img/img_al/foto_al_2.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   }, 
   "al-2": { images:["img/img_al/foto_al_co_sm_po.png","img/img_al/foto_al_co_sm_po_2.png","img/img_al/foto_al_co_sm_po_3.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   }, 
-  "al-3": { images:["img/img_al/foto_alum_e_port.png","img/img_al/foto_alum_e_port_2.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  "al-3": { images:["img/img_al/foto_al_e_po.png","img/img_al/foto_al_e_po_2.png"], 
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   }, 
   "al-4": { images:["img/img_al/foto_sm_al.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   }, 
-  "al-5": { images:["img/img_al/foto_sl_co_al.png","img/img_al/foto_sl_co_al_2.png","img/img_al/foto_sl_co_al_3.png","img/img_al/foto_sl_co_al_4.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  "al-5": { images:["img/img_al/foto_sm_co_al.png","img/img_al/foto_sm_co_al_2.png","img/img_al/foto_sm_co_al_3.png","img/img_al/foto_sm_co_al_4.png"], 
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   }, 
   "al-6": { images:["img/img_al/2_foto_al_co_sm_po.png","img/img_al/2_foto_al_co_sm_po_2.png"], 
-            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
-            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+    descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+    title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   },
-
-  /* METAL CONSTRUCTIONS */ 
-  "co-1": { images:["img/img_co/foto_al_co_sm_po.png"], 
-            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
-            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+  "co-1": { images:["img/img_co/foto_al_co_sm_po.png", "img/img_co/foto_al_co_sm_po_2.png", "img/img_co/foto_al_co_sm_po_3.png"], 
+    descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+    title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
   }, 
   "co-2": { images:["img/img_co/foto_sm_co.png"], 
-            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
-            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+    descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+    title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
   }, 
   "co-3": { images:["img/img_co/foto_sm_co_al.png"], 
-            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
-            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+    descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+    title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
   }, 
   "co-4": { images:["img/img_co/2_foto_al_co_sm_po.png"], 
-            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
-            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+    descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+    title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
   }, 
-
-  /* METAL SOLUTIONS */ 
   "sm-1": { images:["img/img_sm/foto_al_co_sm_po.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
   "sm-2": { images:["img/img_sm/foto_sm_al.png"],
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
   "sm-3": { images:["img/img_sm/foto_sm_co.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
   "sm-4": { images:["img/img_co/foto_sm_co_al.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
   "sm-5": { images:["img/img_co/2_foto_al_co_sm_po.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
-
-/* GATES */
   "po-1": { images:["img/img_po/foto_al_co_sm_po.png"], 
-          descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-          title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
-  "po-2": { images:["img/img_po/foto_alum_e_port.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  "po-2": { images:["img/img_po/foto_al_e_po.png"], 
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
   "po-3": { images:["img/img_po/2_foto_al_co_sm_po.png"], 
-            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
-            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+    descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+    title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   } 
 };
 
-// ===== Variáveis =====
+// Variáveis
 let currentLang = 'pt';
 let modalProject = null;
 let modalIndex = 0;
 
-// ===== Seções =====
+// Seções
 const sectionsInfo = {
   Aluminum: { name: 'Alumínio', prefix: 'al-' },
   MetalConstructions: { name: 'Construções Metálicas', prefix: 'co-' },
@@ -415,7 +452,7 @@ const sectionsInfo = {
   Gates: { name: 'Portões', prefix: 'po-' }
 };
 
-// ===== Criar seções dinamicamente =====
+// Criar seções dinamicamente
 const container = document.getElementById('sections-container');
 for (const [key, value] of Object.entries(sectionsInfo)) {
   const section = document.createElement('div');
@@ -457,7 +494,7 @@ for (const [key, value] of Object.entries(sectionsInfo)) {
   container.appendChild(section);
 }
 
-// ===== Funções =====
+// Funções
 function showSection(sectionId) {
   const home = document.getElementById('Home');
   const allSections = [...document.querySelectorAll('.section'), home];
@@ -477,12 +514,12 @@ function showSection(sectionId) {
   }
 }
 
-// Trocar idioma: códigos convertidos em div .icon
+// Trocar idioma
 function setLanguage(lang) {
   translateTo(lang);
 }
 
-// Tradução dos títulos e descrições
+// Tradução
 function translateTo(lang) {
   currentLang = lang;
   document.querySelectorAll('.project-title').forEach(titleDiv => {
@@ -493,6 +530,7 @@ function translateTo(lang) {
     const key = descDiv.id.replace('desc-', '');
     descDiv.innerText = projectsData[key].descriptions[lang];
   });
+
   const homeTitles = {
     pt: ["Bem-vindo ao Grupo Ribeiro & Moreira", "Construções Metálicas, Soluções Metálicas", "Alumínio", "Construções", "Soluções Metálicas", "Portões"],
     en: ["Welcome to Grupo Ribeiro & Moreira", "Metal Constructions, Metal Solutions", "Aluminum", "Constructions", "Metal Solutions", "Gates"],
@@ -505,37 +543,70 @@ function translateTo(lang) {
   document.getElementById('btn-construcoes').innerText = homeTitles[lang][3];
   document.getElementById('btn-solucoes').innerText = homeTitles[lang][4];
   document.getElementById('btn-portoes').innerText = homeTitles[lang][5];
+
+  const sidebarTitles = {
+    pt: ["Home", "Alumínio", "Construções Metálicas", "Soluções Metálicas", "Portões"],
+    en: ["Home", "Aluminum", "Metal Constructions", "Metal Solutions", "Gates"],
+    es: ["Inicio", "Aluminio", "Construcciones Metálicas", "Soluciones Metálicas", "Portones"],
+    fr: ["Accueil", "Aluminium", "Constructions Métalliques", "Solutions Métalliques", "Portails"]
+  };
+  document.getElementById('menu-home-label').innerText = sidebarTitles[lang][0];
+  document.getElementById('menu-al-label').innerText = sidebarTitles[lang][1];
+  document.getElementById('menu-co-label').innerText = sidebarTitles[lang][2];
+  document.getElementById('menu-sm-label').innerText = sidebarTitles[lang][3];
+  document.getElementById('menu-po-label').innerText = sidebarTitles[lang][4];
 }
 
-// ===== Modal =====
+// Modal funções
 function openModal(projKey) {
   modalProject = projKey;
   modalIndex = 0;
   updateModal();
   document.getElementById('project-modal').style.display = 'flex';
 }
-
 function closeModal() {
   document.getElementById('project-modal').style.display = 'none';
 }
-
 function updateModal() {
   const proj = projectsData[modalProject];
   document.getElementById('modal-img').src = proj.images[modalIndex];
   document.getElementById('modal-description').innerText = proj.descriptions[currentLang];
 }
-
 function modalPrev() {
   modalIndex = (modalIndex - 1 + projectsData[modalProject].images.length) % projectsData[modalProject].images.length;
   updateModal();
 }
-
 function modalNext() {
   modalIndex = (modalIndex + 1) % projectsData[modalProject].images.length;
   updateModal();
 }
+// Fecha modal ao clicar fora do conteúdo
+document.getElementById('project-modal').addEventListener('click', function(event) {
+  if (event.target === this) {
+    closeModal();
+  }
+});
 
-// ===== Inicialização =====
+// Toggle modo claro/escuro
+const toggleBtn = document.getElementById('darkModeToggle');
+toggleBtn.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  toggleBtn.textContent = isLight ? 'Modo Escuro' : 'Modo Claro';
+  // salva preferência no localStorage
+  localStorage.setItem('mode', isLight ? 'light' : 'dark');
+});
+
+// Aplica modo salvo anteriormente
+window.addEventListener('DOMContentLoaded', () => {
+  const savedMode = localStorage.getItem('mode');
+  if (savedMode === 'light') {
+    document.body.classList.add('light');
+    toggleBtn.textContent = 'Modo Escuro';
+  }
+});
+
+// Inicialização
 showSection('Home');
 </script>
 </body>
