@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<title>Grupo Ribeiro & Moreira</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #212121;
+  color: #fff;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 130px;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  z-index: 100;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* espaçamento entre itens maior para estética */
+  align-items: center;
+  width: 100%;
+}
+.sidebar img.logo-small {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  color: #bbb;
+  font-size: 14px; /* tamanho do texto maior e igual */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  user-select: none;
+  transition: color 0.3s;
+  width: 100%;
+  text-align: center; /* centraliza texto */
+}
+.menu-item:hover,
+.menu-item.active {
+  color: #2c752c;
+}
+.menu-item img.icon {
+  width: 36px;  /* ícones maiores */
+  height: 36px;
+  margin-bottom: 8px;
+  object-fit: contain;
+}
+.languages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+  width: 100%;
+  align-items: center;
+}
+.language-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2.5px solid transparent;
+  box-shadow: 0 0 10px 3px transparent;
+  cursor: pointer;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.language-btn.active,
+.language-btn:hover {
+  box-shadow: 0 0 14px 4px #2c752c;
+  border-color: #2c752c;
+}
+.language-btn img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* Conteúdo principal com margem para lado da sidebar */
+.front, .section {
+  margin-left: 130px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.front {
+  background: url('img/background/background_2.jpg') center/cover no-repeat;
+}
+.logo {
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  width: 130px;
+}
+/* Botões principais */
+h1 {
+  font-size: 2.7em;
+  margin: 0;
+}
+p {
+  font-size: 1.3em;
+  margin-top: 14px;
+}
+.option {
+  padding: 14px 22px;
+  font-size: 1.2em;
+  margin: 13px 0;
+  background: rgba(44,117,44,0.74);
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+.option:hover {
+  background: rgba(44,117,44,0.93);
+}
+/* Seções ocultas por padrão */
+.section {
+  padding: 40px 20px 20px 20px;
+  margin-bottom: 20px;
+  display: none;
+  width: calc(100% - 90px);
+}
+.project-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 20px;
+}
+.project {
+  background: #232a2e;
+  border-radius: 8px;
+  padding: 20px;
+  width: 240px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.project.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.project img {
+  width: 100%;
+  border-radius: 4px;
+  max-height: 150px;
+  object-fit: cover;
+}
+.project-title {
+  font-weight: bold;
+  margin: 12px 0 8px;
+}
+.project-desc {
+  font-size: 0.95em;
+  margin-bottom: 8px;
+}
+#project-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+#project-modal .modal-content {
+  position: relative;
+  background: #212121;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#project-modal img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 4px;
+}
+#project-modal .modal-desc {
+  margin-top: 10px;
+  text-align: center;
+}
+#project-modal .modal-buttons {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+#project-modal .modal-buttons button,
+#project-modal .close-btn {
+  padding: 4px 10px;
+  background: rgba(44, 117, 44, 0.74);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #fff;
+}
+#project-modal .modal-buttons button:hover,
+#project-modal .close-btn:hover {
+  background: rgba(44, 117, 44, 0.93);
+}
+#project-modal .close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  text-align: center;
+}
+@media(max-width: 600px) {
+  .project {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="menu">
+    <div class="menu-item" onclick="showSection('Home')" id="icon-home" role="button" tabindex="0" aria-label="Home Section">
+      <img src="img/logo_rb/logo_5.png" alt="Home Icon" class="icon" />
+      Home
+    </div>
+
+    <div class="menu-item" onclick="showSection('Aluminum')" id="icon-al" role="button" tabindex="0" aria-label="Aluminum Section">
+      <img src="img/logo_rb/logo_alum.png" alt="Aluminum Icon" class="icon" />
+      Aluminum
+    </div>
+
+    <div class="menu-item" onclick="showSection('MetalConstructions')" id="icon-co" role="button" tabindex="0" aria-label="Metal Constructions Section">
+      <img src="img/logo_rb/logo_co.png" alt="Metal Constructions Icon" class="icon" />
+      Metal Constructions
+    </div>
+
+    <div class="menu-item" onclick="showSection('MetalSolutions')" id="icon-sm" role="button" tabindex="0" aria-label="Metal Solutions Section">
+      <img src="img/logo_rb/logo_sm.png" alt="Metal Solutions Icon" class="icon" />
+      Metal Solutions
+    </div>
+
+    <div class="menu-item" onclick="showSection('Gates')" id="icon-po" role="button" tabindex="0" aria-label="Gates Section">
+      <img src="img/logo_rb/logo_co.png" alt="Gates Icon" class="icon" />
+      Gates
+    </div>
+  </div>
+
+  <div class="languages" role="navigation" aria-label="Language selection">
+    <div class="language-btn" onclick="setLanguage('pt')" id="lang-pt" role="button" tabindex="0" aria-label="Portuguese Language">
+      <img src="img/bandeiras/bandeira_port.webp" alt="Portuguese Flag" />
+    </div>
+    <div class="language-btn" onclick="setLanguage('en')" id="lang-gb" role="button" tabindex="0" aria-label="English Language">
+      <img src="img/bandeiras/bandeira_uk.png" alt="English Flag" />
+    </div>
+    <div class="language-btn" onclick="setLanguage('es')" id="lang-es" role="button" tabindex="0" aria-label="Spanish Language">
+      <img src="img/bandeiras/bandeira_esp.png" alt="Spanish Flag" />
+    </div>
+    <div class="language-btn" onclick="setLanguage('fr')" id="lang-fr" role="button" tabindex="0" aria-label="French Language">
+      <img src="img/bandeiras/bandeira_fra.png" alt="French Flag" />
+    </div>
+  </div>
+</div>
+
+<div class="front" id="Home">
+  <img src="img/logo_rb/logo_1.webp" alt="Logo Ribeiro & Moreira" class="logo" />
+  <div>
+    <h1 id="title-main">Bem-vindo ao Grupo Ribeiro & Moreira</h1>
+    <p id="subtitle-main">Construções Metálicas, Soluções Metálicas</p>
+    <button class="option" id="btn-aluminio" onclick="showSection('Aluminum')">Alumínio</button>
+    <button class="option" id="btn-construcoes" onclick="showSection('MetalConstructions')">Construções</button>
+    <button class="option" id="btn-solucoes" onclick="showSection('MetalSolutions')">Soluções Metálicas</button>
+    <button class="option" id="btn-portoes" onclick="showSection('Gates')">Portões</button>
+  </div>
+</div>
+
+<div id="sections-container"></div>
+
+<div id="project-modal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal()">X</button>
+    <img id="modal-img" src="" />
+    <div class="modal-desc" id="modal-description"></div>
+    <div class="modal-buttons">
+      <button onclick="modalPrev()">◀</button>
+      <button onclick="modalNext()">▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Dados dos projetos =====
+const projectsData = { 
+  /* ALUMINIUM */ 
+  "al-1": { images:["img/img_al/foto_al.png","img/img_al/foto_al_2.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  }, 
+  "al-2": { images:["img/img_al/foto_al_co_sm_po.png","img/img_al/foto_al_co_sm_po_2.png","img/img_al/foto_al_co_sm_po_3.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  }, 
+  "al-3": { images:["img/img_al/foto_alum_e_port.png","img/img_al/foto_alum_e_port_2.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  }, 
+  "al-4": { images:["img/img_al/foto_sm_al.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  }, 
+  "al-5": { images:["img/img_al/foto_sl_co_al.png","img/img_al/foto_sl_co_al_2.png","img/img_al/foto_sl_co_al_3.png","img/img_al/foto_sl_co_al_4.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  }, 
+  "al-6": { images:["img/img_al/2_foto_al_co_sm_po.png","img/img_al/2_foto_al_co_sm_po_2.png"], 
+            descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
+            title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
+  },
+
+  /* METAL CONSTRUCTIONS */ 
+  "co-1": { images:["img/img_co/foto_al_co_sm_po.png"], 
+            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+  }, 
+  "co-2": { images:["img/img_co/foto_sm_co.png"], 
+            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+  }, 
+  "co-3": { images:["img/img_co/foto_sm_co_al.png"], 
+            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+  }, 
+  "co-4": { images:["img/img_co/2_foto_al_co_sm_po.png"], 
+            descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
+            title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
+  }, 
+
+  /* METAL SOLUTIONS */ 
+  "sm-1": { images:["img/img_sm/foto_al_co_sm_po.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "sm-2": { images:["img/img_sm/foto_sm_al.png"],
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "sm-3": { images:["img/img_sm/foto_sm_co.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "sm-4": { images:["img/img_co/foto_sm_co_al.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "sm-5": { images:["img/img_co/2_foto_al_co_sm_po.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+
+/* GATES */
+  "po-1": { images:["img/img_po/foto_al_co_sm_po.png"], 
+          descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+          title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "po-2": { images:["img/img_po/foto_alum_e_port.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  }, 
+  "po-3": { images:["img/img_po/2_foto_al_co_sm_po.png"], 
+            descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
+            title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
+  } 
+};
+
+// ===== Variáveis =====
+let currentLang = 'pt';
+let modalProject = null;
+let modalIndex = 0;
+
+// ===== Seções =====
+const sectionsInfo = {
+  Aluminum: { name: 'Alumínio', prefix: 'al-' },
+  MetalConstructions: { name: 'Construções Metálicas', prefix: 'co-' },
+  MetalSolutions: { name: 'Soluções Metálicas', prefix: 'sm-' },
+  Gates: { name: 'Portões', prefix: 'po-' }
+};
+
+// ===== Criar seções dinamicamente =====
+const container = document.getElementById('sections-container');
+for (const [key, value] of Object.entries(sectionsInfo)) {
+  const section = document.createElement('div');
+  section.id = key;
+  section.className = 'section';
+  const h2 = document.createElement('h2');
+  h2.innerText = value.name;
+  section.appendChild(h2);
+
+  const list = document.createElement('div');
+  list.className = 'project-list';
+
+  for (const [projKey, projData] of Object.entries(projectsData)) {
+    if (projKey.startsWith(value.prefix)) {
+      const projDiv = document.createElement('div');
+      projDiv.className = 'project';
+      projDiv.onclick = () => openModal(projKey);
+
+      const img = document.createElement('img');
+      img.src = projData.images[0];
+      projDiv.appendChild(img);
+
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'project-title';
+      titleDiv.id = `title-${projKey}`;
+      titleDiv.innerText = projData.title[currentLang];
+      projDiv.appendChild(titleDiv);
+
+      const descDiv = document.createElement('div');
+      descDiv.className = 'project-desc';
+      descDiv.id = `desc-${projKey}`;
+      descDiv.innerText = projData.descriptions[currentLang];
+      projDiv.appendChild(descDiv);
+
+      list.appendChild(projDiv);
+    }
+  }
+  section.appendChild(list);
+  container.appendChild(section);
+}
+
+// ===== Funções =====
+function showSection(sectionId) {
+  const home = document.getElementById('Home');
+  const allSections = [...document.querySelectorAll('.section'), home];
+  allSections.forEach(sec => {
+    if (sec.id !== sectionId) {
+      sec.style.display = 'none';
+      sec.querySelectorAll('.project').forEach(p => p.classList.remove('show'));
+    }
+  });
+  const newSec = sectionId === 'Home' ? home : document.getElementById(sectionId);
+  newSec.style.display = sectionId === 'Home' ? 'flex' : 'block';
+  if (sectionId !== 'Home') {
+    const projects = newSec.querySelectorAll('.project');
+    projects.forEach((proj, i) => {
+      setTimeout(() => proj.classList.add('show'), i * 150);
+    });
+  }
+}
+
+// Trocar idioma: códigos convertidos em div .icon
+function setLanguage(lang) {
+  translateTo(lang);
+}
+
+// Tradução dos títulos e descrições
+function translateTo(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.project-title').forEach(titleDiv => {
+    const key = titleDiv.id.replace('title-', '');
+    titleDiv.innerText = projectsData[key].title[lang];
+  });
+  document.querySelectorAll('.project-desc').forEach(descDiv => {
+    const key = descDiv.id.replace('desc-', '');
+    descDiv.innerText = projectsData[key].descriptions[lang];
+  });
+  const homeTitles = {
+    pt: ["Bem-vindo ao Grupo Ribeiro & Moreira", "Construções Metálicas, Soluções Metálicas", "Alumínio", "Construções", "Soluções Metálicas", "Portões"],
+    en: ["Welcome to Grupo Ribeiro & Moreira", "Metal Constructions, Metal Solutions", "Aluminum", "Constructions", "Metal Solutions", "Gates"],
+    es: ["Bienvenido al Grupo Ribeiro & Moreira", "Construcciones Metálicas, Soluciones Metálicas", "Aluminio", "Construcciones", "Soluciones Metálicas", "Portones"],
+    fr: ["Bienvenue au Groupe Ribeiro & Moreira", "Constructions Métalliques, Solutions Métalliques", "Aluminium", "Constructions", "Solutions Métalliques", "Portails"]
+  };
+  document.getElementById('title-main').innerText = homeTitles[lang][0];
+  document.getElementById('subtitle-main').innerText = homeTitles[lang][1];
+  document.getElementById('btn-aluminio').innerText = homeTitles[lang][2];
+  document.getElementById('btn-construcoes').innerText = homeTitles[lang][3];
+  document.getElementById('btn-solucoes').innerText = homeTitles[lang][4];
+  document.getElementById('btn-portoes').innerText = homeTitles[lang][5];
+}
+
+// ===== Modal =====
+function openModal(projKey) {
+  modalProject = projKey;
+  modalIndex = 0;
+  updateModal();
+  document.getElementById('project-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('project-modal').style.display = 'none';
+}
+
+function updateModal() {
+  const proj = projectsData[modalProject];
+  document.getElementById('modal-img').src = proj.images[modalIndex];
+  document.getElementById('modal-description').innerText = proj.descriptions[currentLang];
+}
+
+function modalPrev() {
+  modalIndex = (modalIndex - 1 + projectsData[modalProject].images.length) % projectsData[modalProject].images.length;
+  updateModal();
+}
+
+function modalNext() {
+  modalIndex = (modalIndex + 1) % projectsData[modalProject].images.length;
+  updateModal();
+}
+
+// ===== Inicialização =====
+showSection('Home');
+</script>
+</body>
+</html>
