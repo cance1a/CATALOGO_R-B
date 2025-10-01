@@ -5,6 +5,13 @@
 <title>Grupo Ribeiro & Moreira</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
+html, body {
+  overflow: hidden;   /* Bloqueia scroll vertical e horizontal */
+  height: 100vh;      /* Altura da viewport */
+  width: 100vw;       /* Largura da viewport */
+  margin: 0;
+  padding: 0;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -199,14 +206,6 @@ body.light .project {
   max-height: 150px;
   object-fit: cover;
 }
-.project-title {
-  font-weight: bold;
-  margin: 12px 0 8px;
-}
-.project-desc {
-  font-size: 0.95em;
-  margin-bottom: 8px;
-}
 #project-modal {
   position: fixed;
   top: 0;
@@ -242,54 +241,22 @@ body.light #project-modal .modal-content {
   max-width: 100%;
   max-height: 70vh;
   border-radius: 4px;
+  cursor: grab;
 }
 #project-modal .modal-desc {
   margin-top: 10px;
   text-align: center;
-}
-#project-modal .modal-buttons {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-}
-#project-modal .modal-buttons button {
-  padding: 4px 10px;
-  background: rgba(44, 117, 44, 0.74);
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #fff;
-}
-#project-modal .modal-buttons button:hover {
-  background: rgba(44, 117, 44, 0.93);
 }
 @media(max-width: 600px) {
   .project {
     width: 100%;
   }
 }
-
-/* Novo botão modo claro/escuro */
-#darkModeToggle {
-  position: fixed;
-  top: 10px;
-  left: 140px; /* para não ficar no meio da sidebar */
-  background: #2c752c;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 14px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  z-index: 1000;
-  transition: background 0.3s;
-}
-#darkModeToggle:hover {
-  background: #1e4f1e;
-}
 </style>
 </head>
+
 <body>
+
 
 <div class="sidebar">
   <div class="menu">
@@ -298,26 +265,32 @@ body.light #project-modal .modal-content {
       <span id="menu-home-label">Home</span>
     </div>
 
+
     <div class="menu-item" onclick="showSection('Aluminum')" id="icon-al" role="button" tabindex="0" aria-label="Aluminum Section">
       <img src="img/logo_rb/logo_alum.png" alt="Aluminum Icon" class="icon" />
       <span id="menu-al-label">Aluminum</span>
     </div>
+
 
     <div class="menu-item" onclick="showSection('MetalConstructions')" id="icon-co" role="button" tabindex="0" aria-label="Metal Constructions Section">
       <img src="img/logo_rb/logo_co.png" alt="Metal Constructions Icon" class="icon" />
       <span id="menu-co-label">Metal Constructions</span>
     </div>
 
+
     <div class="menu-item" onclick="showSection('MetalSolutions')" id="icon-sm" role="button" tabindex="0" aria-label="Metal Solutions Section">
       <img src="img/logo_rb/logo_sm.png" alt="Metal Solutions Icon" class="icon" />
       <span id="menu-sm-label">Metal Solutions</span>
     </div>
+
 
     <div class="menu-item" onclick="showSection('Gates')" id="icon-po" role="button" tabindex="0" aria-label="Gates Section">
       <img src="img/logo_rb/logo_co.png" alt="Gates Icon" class="icon" />
       <span id="menu-po-label">Gates</span>
     </div>
   </div>
+
+
 
   <div class="languages" role="navigation" aria-label="Language selection">
     <div class="language-btn" onclick="setLanguage('pt')" id="lang-pt" role="button" tabindex="0" aria-label="Portuguese Language">
@@ -335,7 +308,7 @@ body.light #project-modal .modal-content {
   </div>
 </div>
 
-<button id="darkModeToggle" aria-label="Toggle dark/light mode">Modo Claro</button>
+
 
 <div class="front" id="Home">
   <img src="img/logo_rb/logo_1.webp" alt="Logo Ribeiro & Moreira" class="logo" />
@@ -349,22 +322,26 @@ body.light #project-modal .modal-content {
   </div>
 </div>
 
+
+
 <div id="sections-container"></div>
+
+
 
 <div id="project-modal">
   <div class="modal-content">
     <img id="modal-img" src="" />
     <div class="modal-desc" id="modal-description"></div>
-    <div class="modal-buttons">
-      <button onclick="modalPrev()">◀</button>
-      <button onclick="modalNext()">▶</button>
-    </div>
   </div>
 </div>
+
+
 
 <script>
 // ===== Dados dos projetos =====
 const projectsData = { 
+
+// Alumínio
   "al-1": { images:["img/img_al/foto_al.png","img/img_al/foto_al_2.png"], 
     descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
     title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
@@ -389,6 +366,8 @@ const projectsData = {
     descriptions:{pt:"Obra em x-sitio e x-ano",en:"Project at x-site, x-year",es:"Obra en x-sitio, x-año",fr:"Travail à x-sitio et x-année"}, 
     title:{pt:"Construção Residencial",en:"Modern Aluminum Stairs",es:"Escalera de Aluminio Moderna",fr:"Escalier en Aluminium Moderne"}
   },
+
+// Construções Metálicas
   "co-1": { images:["img/img_co/foto_al_co_sm_po.png", "img/img_co/foto_al_co_sm_po_2.png", "img/img_co/foto_al_co_sm_po_3.png"], 
     descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
     title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
@@ -405,6 +384,8 @@ const projectsData = {
     descriptions:{pt:"Porto, 2023",en:"Porto, 2023",es:"Oporto, 2023",fr:"Porto, 2023"}, 
     title:{pt:"Guarda em Inox",en:"Stainless Steel Railing",es:"Barandilla de Acero Inoxidable",fr:"Garde-corps en Inox"}
   }, 
+
+// Soluções Metálicas
   "sm-1": { images:["img/img_sm/foto_al_co_sm_po.png"], 
     descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
     title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
@@ -425,6 +406,8 @@ const projectsData = {
     descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
     title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
   }, 
+
+// Portões
   "po-1": { images:["img/img_po/foto_al_co_sm_po.png"], 
     descriptions:{pt:"Braga, 2025",en:"Braga, 2025",es:"Braga, 2025",fr:"Braga, 2025"}, 
     title:{pt:"Portão Automático",en:"Automatic Gate",es:"Portón Automático",fr:"Portail Automatique"}
@@ -439,10 +422,12 @@ const projectsData = {
   } 
 };
 
+
 // Variáveis
 let currentLang = 'pt';
 let modalProject = null;
 let modalIndex = 0;
+
 
 // Seções
 const sectionsInfo = {
@@ -451,6 +436,36 @@ const sectionsInfo = {
   MetalSolutions: { name: 'Soluções Metálicas', prefix: 'sm-' },
   Gates: { name: 'Portões', prefix: 'po-' }
 };
+
+
+// Títulos das secções para tradução dinâmica
+const sectionTitles = {
+  pt: {
+    Aluminum: "Alumínio",
+    MetalConstructions: "Construções Metálicas",
+    MetalSolutions: "Soluções Metálicas",
+    Gates: "Portões"
+  },
+  en: {
+    Aluminum: "Aluminum",
+    MetalConstructions: "Metal Constructions",
+    MetalSolutions: "Metal Solutions",
+    Gates: "Gates"
+  },
+  es: {
+    Aluminum: "Aluminio",
+    MetalConstructions: "Construcciones Metálicas",
+    MetalSolutions: "Soluciones Metálicas",
+    Gates: "Portones"
+  },
+  fr: {
+    Aluminum: "Aluminium",
+    MetalConstructions: "Constructions Métalliques",
+    MetalSolutions: "Solutions Métalliques",
+    Gates: "Portails"
+  }
+};
+
 
 // Criar seções dinamicamente
 const container = document.getElementById('sections-container');
@@ -493,6 +508,7 @@ for (const [key, value] of Object.entries(sectionsInfo)) {
   section.appendChild(list);
   container.appendChild(section);
 }
+
 
 // Funções
 function showSection(sectionId) {
@@ -555,9 +571,17 @@ function translateTo(lang) {
   document.getElementById('menu-co-label').innerText = sidebarTitles[lang][2];
   document.getElementById('menu-sm-label').innerText = sidebarTitles[lang][3];
   document.getElementById('menu-po-label').innerText = sidebarTitles[lang][4];
+
+  // Atualiza títulos das secções
+  Object.entries(sectionTitles[lang]).forEach(([sectionId, title]) => {
+    const el = document.querySelector(`#${sectionId} > h2`);
+    if (el) {
+      el.innerText = title;
+    }
+  });
 }
 
-// Modal funções
+// Modal funções com swipe/drag para trocar imagem
 function openModal(projKey) {
   modalProject = projKey;
   modalIndex = 0;
@@ -587,24 +611,139 @@ document.getElementById('project-modal').addEventListener('click', function(even
   }
 });
 
-// Toggle modo claro/escuro
-const toggleBtn = document.getElementById('darkModeToggle');
-toggleBtn.addEventListener('click', () => {
-  document.body.classList.toggle('light');
-  const isLight = document.body.classList.contains('light');
-  toggleBtn.textContent = isLight ? 'Modo Escuro' : 'Modo Claro';
-  // salva preferência no localStorage
-  localStorage.setItem('mode', isLight ? 'light' : 'dark');
-});
+// Swipe e drag para trocar foto modal
+(() => {
+  const modalImg = document.getElementById('modal-img');
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
 
-// Aplica modo salvo anteriormente
-window.addEventListener('DOMContentLoaded', () => {
-  const savedMode = localStorage.getItem('mode');
-  if (savedMode === 'light') {
-    document.body.classList.add('light');
-    toggleBtn.textContent = 'Modo Escuro';
-  }
-});
+  // Touch
+  modalImg.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    }
+  }, { passive: true });
+
+  modalImg.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length === 1) {
+      currentX = e.touches[0].clientX;
+    }
+  }, { passive: true });
+
+  modalImg.addEventListener('touchend', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const deltaX = currentX - startX;
+    if (deltaX > 50) {
+      modalPrev();
+    } else if (deltaX < -50) {
+      modalNext();
+    }
+  });
+
+  // Mouse
+  modalImg.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    startX = e.clientX;
+    isDragging = true;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    currentX = e.clientX;
+  });
+
+  window.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const deltaX = currentX - startX;
+    if (deltaX > 50) {
+      modalPrev();
+    } else if (deltaX < -50) {
+      modalNext();
+    }
+  });
+})();
+
+// Função de zoom com pinch (permanece igual)
+(() => {
+  let start = {};
+  let currentScale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let initialLoad = true;
+
+  const distance = (ev) => {
+    return Math.hypot(
+      ev.touches[0].pageX - ev.touches[1].pageX,
+      ev.touches[0].pageY - ev.touches[1].pageY
+    );
+  };
+
+  window.addEventListener('touchstart', (ev) => {
+    if (ev.target.tagName === 'IMG' && ev.touches.length === 2) {
+      ev.preventDefault();
+
+      start.x = (ev.touches[0].pageX + ev.touches[1].pageX) / 2;
+      start.y = (ev.touches[0].pageY + ev.touches[1].pageY) / 2;
+      start.distance = distance(ev);
+      initialLoad = true;
+      currentScale = 1;
+      translateX = 0;
+      translateY = 0;
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (ev) => {
+    if (ev.target.tagName === 'IMG' && ev.touches.length === 2) {
+      ev.preventDefault();
+
+      let scaleFactor;
+      if (ev.scale) {
+        scaleFactor = ev.scale;
+      } else {
+        scaleFactor = distance(ev) / start.distance;
+      }
+      currentScale = Math.min(Math.max(1, scaleFactor), 4);
+
+      const img = ev.target;
+      if (initialLoad) {
+        const rect = img.getBoundingClientRect();
+        translateX = 0;
+        translateY = 0;
+
+        // Definir a origem da transformação no ponto entre os dedos
+        const originX = ((start.x - rect.left) / rect.width) * 100;
+        const originY = ((start.y - rect.top) / rect.height) * 100;
+        img.style.transformOrigin = `${originX}% ${originY}%`;
+        initialLoad = false;
+      }
+
+      // Calcular deslocamento de pan com base no movimento dos dedos
+      const deltaX = ((ev.touches[0].pageX + ev.touches[1].pageX) / 2 - start.x) * 1.5;
+      const deltaY = ((ev.touches[0].pageY + ev.touches[1].pageY) / 2 - start.y) * 1.5;
+
+      const translateXCurrent = translateX + deltaX;
+      const translateYCurrent = translateY + deltaY;
+
+      const transformStyle = `translate(${translateXCurrent}px, ${translateYCurrent}px) scale(${currentScale})`;
+      img.style.transform = transformStyle;
+      img.style.zIndex = '9999';  // Sobrepor para facilitar visualização
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', (ev) => {
+    if (ev.target.tagName === 'IMG') {
+      // Pode decidir se quer resetar o zoom ao soltar os dedos ou manter
+      // Para manter, comente as duas linhas abaixo
+      ev.target.style.transform = '';
+      ev.target.style.zIndex = '';
+    }
+  });
+})();
+
 
 // Inicialização
 showSection('Home');
